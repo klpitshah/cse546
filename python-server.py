@@ -1,4 +1,10 @@
 from flask import Flask, request, jsonify
+import boto3
+import os
+
+
+s3_client = boto3.client("s3")
+
 
 app = Flask(__name__)
 
@@ -12,8 +18,14 @@ def upload_file():
     if file.filename == "":
         return jsonify({"error": "No selected file"}), 400
 
-    # Process the file (for now, just returning its name)
-    return jsonify({"message": "File received", "filename": file.filename}), 200
+    try:
+        # Upload file to S3
+        s3_client.upload_fileobj(file, S3_BUCKET_NAME, file.filename)
+
+        return jsonify({"message": "File uploaded successfully", "filename": file.filename}), 200
+    except Exception as e:
+        return jsonify({"error": f"Failed to upload file: {str(e)}"}), 500
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000)
