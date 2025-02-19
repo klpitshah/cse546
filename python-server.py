@@ -20,7 +20,7 @@ def upload_file():
 
     try:
         # Upload file to S3
-        s3_client.upload_fileobj(file, S3_BUCKET_NAME, file.filename)
+        s3_client.upload_fileobj(file, "1225969188-in-bucket" , file.filename)
 
         return jsonify({"message": "File uploaded successfully", "filename": file.filename}), 200
     except Exception as e:
