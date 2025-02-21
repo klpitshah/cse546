@@ -3,7 +3,7 @@ import csv
 import os
 
 SIMPLE_DB_DOMAIN = "1225969188-simpleDB"
-CSV_FILE = "classification_results.csv"
+CSV_FILE = "dataset.csv"
 
 sdb = boto3.client("sdb", region_name="us-east-1")
 
