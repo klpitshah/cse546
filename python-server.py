@@ -1,10 +1,11 @@
 from flask import Flask, request, jsonify
 import boto3
-import os
 
+s3_client = boto3.client("s3", region_name="us-east-2")
+sdb = boto3.client("sdb", region_name="us-east-1")
 
-s3_client = boto3.client("s3")
-sdb = boto3.client("sdb")
+S3_BUCKET = "1225969188-in-bucket"
+SIMPLE_DB_DOMAIN = "1225969188-simpleDB"
 
 app = Flask(__name__)
 
@@ -14,16 +15,17 @@ def upload_file():
         return jsonify({"error": "Missing file with key 'inputFile'"}), 400
 
     file = request.files["inputFile"]
-    
+
     if file.filename == "":
         return jsonify({"error": "No selected file"}), 400
 
+    filename = file.filename
+
     try:
-        # Upload file to S3
-        s3_client.upload_fileobj(file, "1225969188-in-bucket" , file.filename)
+        s3_client.upload_fileobj(file, S3_BUCKET, filename)
 
         response = sdb.get_attributes(
-            DomainName="1225969188-simpleDB",
+            DomainName=SIMPLE_DB_DOMAIN,
             ItemName=filename,
             AttributeNames=["result"]
         )
@@ -34,9 +36,9 @@ def upload_file():
             result = "Unknown"
 
         return f"{filename}:{result}", 200
-    except Exception as e:
-        return "error" + e, 400
 
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000)
