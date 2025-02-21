@@ -20,8 +20,8 @@ def upload_file():
     if file.filename == "":
         return jsonify({"error": "No selected file"}), 400
 
-    filename = file.filename
-    filename_without_ext, _ = os.path.splitext(file.filename)
+    filename = file.filename.replace(":Zone.Identifier", "")
+    filename_without_ext, _ = os.path.splitext(filename)
 
     try:
         s3_client.upload_fileobj(file, S3_BUCKET, filename)
