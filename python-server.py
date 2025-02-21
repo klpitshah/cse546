@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 import boto3
+import os
 
 s3_client = boto3.client("s3", region_name="us-east-2")
 sdb = boto3.client("sdb", region_name="us-east-1")
