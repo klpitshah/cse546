@@ -32,12 +32,14 @@ def upload_file():
             AttributeNames=["result"]
         )
 
+        print(response)
+
         if "Attributes" in response:
             result = response["Attributes"][0]["Value"]
         else:
             result = "Unknown"
 
-        return f"{filename}:{result}", 200
+        return f"{filename_without_ext}:{result}", 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
