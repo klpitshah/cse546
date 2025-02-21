@@ -4,7 +4,7 @@ import os
 
 
 s3_client = boto3.client("s3")
-
+sdb = boto3.client("sdb")
 
 app = Flask(__name__)
 
@@ -22,9 +22,20 @@ def upload_file():
         # Upload file to S3
         s3_client.upload_fileobj(file, "1225969188-in-bucket" , file.filename)
 
-        return jsonify({"message": "File uploaded successfully", "filename": file.filename}), 200
+        response = sdb.get_attributes(
+            DomainName="1225969188-simpleDB",
+            ItemName=filename,
+            AttributeNames=["result"]
+        )
+
+        if "Attributes" in response:
+            result = response["Attributes"][0]["Value"]
+        else:
+            result = "Unknown"
+
+        return f"{filename}:{result}", 200
     except Exception as e:
-        return jsonify({"error": f"Failed to upload file: {str(e)}"}), 500
+        return "error" + e, 400
 
 
 if __name__ == "__main__":
