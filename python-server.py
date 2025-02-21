@@ -20,13 +20,14 @@ def upload_file():
         return jsonify({"error": "No selected file"}), 400
 
     filename = file.filename
+    filename_without_ext, _ = os.path.splitext(file.filename)
 
     try:
         s3_client.upload_fileobj(file, S3_BUCKET, filename)
 
         response = sdb.get_attributes(
             DomainName=SIMPLE_DB_DOMAIN,
-            ItemName=filename,
+            ItemName=filename_without_ext,
             AttributeNames=["result"]
         )
 
