@@ -32,8 +32,6 @@ def upload_file():
             AttributeNames=["result"]
         )
 
-        print(response)
-
         if "Attributes" in response:
             result = response["Attributes"][0]["Value"]
         else:
