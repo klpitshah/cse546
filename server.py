@@ -24,7 +24,11 @@ def upload_file():
     filename_without_ext, _ = os.path.splitext(filename)
 
     try:
-        s3_client.upload_fileobj(file, S3_BUCKET, filename)
+        # s3_client.upload_fileobj(file, S3_BUCKET, filename)
+        try:
+            s3_client.upload_fileobj(file, S3_BUCKET, filename)
+        except Exception as e:
+            print("something wrong for file " + filename_without_ext)
 
         response = sdb.get_attributes(
             DomainName=SIMPLE_DB_DOMAIN,
