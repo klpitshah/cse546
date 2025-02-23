@@ -22,6 +22,7 @@ def upload_file():
 
     filename = file.filename.replace(":Zone.Identifier", "")
     filename_without_ext, _ = os.path.splitext(filename)
+    print(filename_without_ext)
 
     try:
         # s3_client.upload_fileobj(file, S3_BUCKET, filename)
