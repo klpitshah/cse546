@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 import boto3
+import uuid
 import os
 
 s3_client = boto3.client("s3", region_name="us-east-1")
@@ -26,10 +27,8 @@ def upload_file():
 
     try:
         # s3_client.upload_fileobj(file, S3_BUCKET, filename)
-        try:
-            s3_client.upload_fileobj(file, S3_BUCKET, filename)
-        except Exception as e:
-            print("something wrong for file " + filename_without_ext)
+        s3_filename = f"{uuid.uuid4()}-{filename}"
+        s3_client.upload_fileobj(file, S3_BUCKET, s3_filename)
 
         response = sdb.get_attributes(
             DomainName=SIMPLE_DB_DOMAIN,
