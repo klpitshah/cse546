@@ -26,9 +26,9 @@ def upload_file():
     # print(filename_without_ext)
 
     try:
-        # s3_client.upload_fileobj(file, S3_BUCKET, filename)
-        s3_filename = f"{uuid.uuid4()}-{filename}"
-        s3_client.upload_fileobj(file, S3_BUCKET, s3_filename)
+        s3_client.upload_fileobj(file, S3_BUCKET, filename)
+        # s3_filename = f"{uuid.uuid4()}-{filename}"
+        # s3_client.upload_fileobj(file, S3_BUCKET, s3_filename)
 
         response = sdb.get_attributes(
             DomainName=SIMPLE_DB_DOMAIN,
